@@ -44,10 +44,10 @@ function dynomobiletemplate_scripts() {
 
 	// Rendering function: gets the file and outputs the necessary HTML and Javascript Code
 	// If no file is found returns an error to be rendered in place of the shortcode.
- 	private function table_from_csv($file, $search = NULL, $table_id) {
-		if ($search == true) $data_filtering = 'data-filtering="true"';
-		else $data_filtering = '';
+ 	private function table_from_csv($file, $search = 'false', $table_id) {
+		$style = '';
 		if (empty($table_id)) $table_id = $this->generate_unique_id();
+		if ( !in_array( $search, array('true', 'false') ) ) $search = 'false';
 		$f = fopen(ABSPATH.$file, "r");
 		if (!$f) return 'Error: file not found at '.$file;
 		$isFirstRow = true;
@@ -93,6 +93,7 @@ function dynomobiletemplate_scripts() {
 				        \"paging\": false,
 				        \"responsive\": true,
 				        \"colReorder\": true,
+				        \"searching\": ".$search.",
 				        \"dom\": 'Bfrtip',
 				                \"buttons\": [
 				                    'colvis'
@@ -111,7 +112,7 @@ function dynomobiletemplate_scripts() {
 				} );
 			</script>
 		";
-		return $table.$javascript;
+		return $table.$style.$javascript;
 	}
  }
 
