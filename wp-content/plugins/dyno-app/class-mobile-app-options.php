@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin name:		Dyno Nobel Mobile App Options
- * Description: 	Adds a page in the Administration Area with options for the Mobile App. Adds cusotm JSON calls to retrieve those options.
+ * Description: 	Adds a page in the Administration Area with options for the Mobile App. Adds cusotm JSON call to retrieve those options.
  * Author: Mauro Dalu
  * Version: 1.0
  * Author URI: http://ipassion.it
@@ -162,9 +162,10 @@ class DynoMobileAppOptions {
 
 	public function region_name_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_option_name[region_name]" id="region_name" value="%s"> defaults: site name',
+			'<input class="regular-text" type="text" name="mobile_app_option_name[region_name]" id="region_name" value="%s">',
 			isset( $this->mobile_app_options['region_name'] ) ? esc_attr( $this->mobile_app_options['region_name']) : ''
 		);
+		echo ' default: site name (currently: '.get_bloginfo( 'name' ).')';
 	}
 
 }
@@ -192,7 +193,6 @@ class DynoMobileAppCustomApiCalls {
 		return $options;
 	}
 }
-
 $mobile_app_custom_api_calls = new DynoMobileAppCustomApiCalls();
 
 /* 

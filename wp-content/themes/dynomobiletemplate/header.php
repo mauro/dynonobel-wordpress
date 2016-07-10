@@ -1,3 +1,8 @@
+<?php 
+	if (!is_single() and !is_page()) {
+		wp_redirect( 'http://dynonobel.com', $status = 302 );
+	}
+?>
 <!doctype html>
 
 <!--[if lt IE 7]><html <?php language_attributes(); ?> class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->

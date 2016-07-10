@@ -20,12 +20,16 @@
 	<?php endwhile; ?>
 	<?php else : ?>
 	
-		<div class="hero">
-			<h1>No Content Found</h1>
-		</div>
-		<div class="container">
-			Sorry!
-		</div>
+		<header id="post-not-found">
+			<div class="hero">
+				<div class="container">
+					<h1>
+						Nothing Found
+					</h1>
+				</div>
+			</div>
+		</header>
+		
 	
 	<?php endif; ?>
 

@@ -32,8 +32,14 @@ function dynomobiletemplate_scripts() {
 
 	// Helper function to generate a unique HTML/CSS ID for a table if
 	// no ID is given through the shortcode.
-	private function generate_unique_id() {
-		return 'table_'.microtime();
+	private function generate_unique_id($length = 10) {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+		    $charactersLength = strlen($characters);
+		    $randomString = '';
+		    for ($i = 0; $i < $length; $i++) {
+		        $randomString .= $characters[rand(0, $charactersLength - 1)];
+		    }
+		    return $randomString;
 	}
 
 	// Rendering function: gets the file and outputs the necessary HTML and Javascript Code
@@ -62,7 +68,7 @@ function dynomobiletemplate_scripts() {
 		        				if ($column > $columns_to_show_xs) $breakpoints .= 'xs';
 		        				if ($column > $columns_to_show_sm) $breakpoints .= ' sm';
 		        				if ($column > $columns_to_show_md) $breakpoints .= ' md';
-		        				$table .= "        <th class=\"class=\"col-".$column."\" data-breakpoints=\"".$breakpoints."\">" . htmlspecialchars($cell) . "</th>\n";
+		        				$table .= "        <th class=\"col-".$column."\" data-breakpoints=\"".$breakpoints."\">" . htmlspecialchars($cell) . "</th>\n";
 		        				$visibility_toggle .= "		<li><a class=\"toggle-vis\" data-column=\"".($column-1)."\">" . htmlspecialchars($cell) . "</a></li>\n";
 		        			}
 		        		}
