@@ -1,0 +1,249 @@
+/* @override 
+	http://localhost:8888/wp-content/themes/dynomobiletemplate/style.css */
+
+/******************************************************************
+Theme Name: Dyno Mobile
+Theme URI: http://www.surgeworks.com
+Description: This theme is optimized for the Dyno Nobel mobile app. It adds a shortcode to display responsive tables using a CSV file as a source. Usage: Add the following shortcode to any post or page: <code>[table-from-csv file="path/to/file.csv"]</code>. Make sure to specify the aboslute URL to your CSV file (i.e. /wp-content/uploads/2016/08/filename.csv). The shortcode accepts the following optional parameters: <code>search="true|false"</code> and <code>id="unique-table-id-here"</code>.
+Author: Mauro Dalu, Surgeworks
+Author URI: http://www.surgeworks.com
+Version: 1.0
+******************************************************************/
+
+* {
+	font-family: Arial;
+	box-sizing: border-box !important;
+	background-color: transparent;
+	font-size: 12pt;
+}
+body {
+	padding: 0;
+	margin:  0;
+}
+.wrapper {
+	padding-bottom: 44px;
+}
+.container {
+	margin-bottom: 15px;
+	padding-top: 15px;
+}
+table thead {
+	background-color: #f5f5f5;
+}
+table tr.footable-detail-row td {
+	padding: 0;
+}
+table tr.child {
+	background-color: #E1E9EE !important;
+	-moz-box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+	opacity: 0.9;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+}
+table.supertable.display.responsive tbody tr {
+	border-bottom: 1px solid #E1E9EE !important;
+}
+table th, table td {
+	padding: 5px;
+}
+.supertable tr.even {
+	background: rgba(224, 232, 238, 0.4);
+}
+td.col-1 {
+	height: 44px !important;
+}
+.dataTables_filter {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 5px;
+	margin: 0;
+	background-color: white;
+	border-top: 1px solid silver;
+	z-index: 99;
+	-moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.19);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.19);
+}
+.dataTables_filter label {
+	width: 100%;
+	position: relative;
+	text-align: center;
+	color: silver;
+	text-transform: uppercase;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+	font-size: 9pt;
+}
+.dataTables_filter label input.form-control.input-sm {
+	width: 80%;
+	font-size: 17px;
+	position: relative;
+	border-radius: 0;
+	background-color: #f2f5f8;
+	border-style: none;
+	font-weight: normal;
+	font-style: normal;
+}
+table.dataTable thead .sorting:after { 
+	opacity:0.2;
+	content:"\e150";
+}
+table.dataTable thead .sorting_asc:after { 
+	content:"\e155";
+}
+table.dataTable thead .sorting_desc:after {
+	content:"\e156";
+}
+.dt-buttons.btn-group {
+	min-width: 320px;
+	padding: 10px;
+}
+.btn.buttons-colvis {
+	background-color: #54c7fd;
+	color: white;
+	font-weight: bold;
+	text-transform: uppercase;
+	border-radius: 0;
+	border: none;
+	width: 60% !important;
+}
+.btn.buttons-colvis span {
+	font-size: 10pt;
+}
+.dropdown-menu{
+	z-index:1000;
+	min-width:160px;
+	padding: 0;
+	font-size:14px;
+	text-align:left;
+	list-style:none;
+	background-color: rgba(82, 197, 253, 0.95);
+	-webkit-background-clip:padding-box;
+	background-clip: padding-box;
+	border:1px solid #ccc;
+	border:1px solid rgba(0,0,0,.15);
+	border-radius:0px;
+	height: 50 vh;
+	display: block;
+	float: none;
+	visibility: visible;
+	margin: 0;
+	position: fixed;
+	top: 50vh !important;
+	width: 90%;
+	left: 5% !important;
+	-moz-box-shadow: 0 320px 500px rgba(0, 0, 0, 0.2), 0 -320px 500px rgba(0, 0, 0, 0.2), 0 1px 50px rgba(0, 0, 0, 0.8);
+	box-shadow: 0 320px 500px rgba(0, 0, 0, 0.2), 0 -320px 500px rgba(0, 0, 0, 0.2), 0 1px 50px rgba(0, 0, 0, 0.8);
+	color: white;
+	max-height: 80vh;
+	overflow: scroll;
+	border-bottom-style: none !important;
+}
+.dropdown-menu>li>a, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+	color: white;
+	text-decoration: line-through;
+	opacity: 0.6;
+	text-transform: uppercase;
+	font-weight: bold;
+	background-color: rgba(0,0,0,0.2);
+	line-height: 32px !important;
+}
+.dropdown-menu>li {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+	max-width: 100%;
+	overflow: hidden;
+}
+.dropdown-menu>.active>a, .dropdown-menu>.active>a:focus, .dropdown-menu>.active>a:hover {
+	color:inherit;
+	outline:0;
+	background-color: transparent;
+	text-decoration: none;
+	opacity: 1;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child:before,table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
+	top:10px;
+	left:7px;
+	height: 22px;
+	width: 22px;
+	display:block;
+	position:absolute;
+	color: #54c6fc;
+	border: 1px solid #54c6fc;
+	border-radius:22px;
+	box-shadow: 0 0 0 #444;
+	box-sizing:content-box;
+	text-align:center;
+	font-family:'Courier New', Courier, monospace;
+	line-height:12px;
+	content:'…';
+	font-size: 23px;
+	background-color: white;
+	-moz-box-shadow: 0 0 0 #444;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before,table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th:first-child:before { 
+	content:'…';
+	background-color: rgba(83, 198, 253, 1);
+	color: white;
+}
+table.dataTable.dtr-inline.collapsed>tbody>tr>td:first-child,table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child { 
+	position:relative;
+	padding-left:40px;
+	cursor:pointer;
+}
+
+.dataTables_info {
+	display: none;
+}
+
+img.aligncenter {
+	align-self: center;
+}
+img.size-full {
+	width: auto;
+	height: auto;
+	max-height: 50vh;
+	max-width: 100%;
+}
+header {
+	width: 100%;
+	height: 30vh;
+	display: table;
+	background-color: #e1e9ee;
+}
+.hero {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 20px;
+	font-family: AppleSDGothicNeo-Light;
+}
+.hero h1 a {
+	font-weight: 200;
+	font-size: 30pt;
+	font-family: AppleSDGothicNeo-Light;
+	color: black;
+}
+a {
+	font-size: inherit;
+	font-family: AppleSDGothicNeo-Light;
+	text-transform: capitalize;
+	text-decoration: none;
+	color: navy;
+}
+a:hover {
+	color: blue;
+}
+footer {
+	width: 100%;
+	display: table;
+	line-height: 44px;
+	background-color: #e1e9ee;
+	margin: 0;
+	padding: 44px;
+	text-align: right;
+}
