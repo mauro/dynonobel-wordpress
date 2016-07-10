@@ -177,9 +177,13 @@ class DynoMobileAppCustomApiCalls {
 	}
 
 	public function register_routes() {
-		register_rest_route( 'mobile-app/v1', '/options/', array(
+		register_rest_route( 'mobile-app/v1/', '/options/', array(
 		    'methods' => 'GET',
 		    'callback' => array($this, 'get_mobile_app_options'),
+		) );
+		register_rest_route( 'mobile-app/v1/', '/sites/', array(
+		    'methods' => 'GET',
+		    'callback' => array($this, 'get_sites'),
 		) );
 	}
 
@@ -191,6 +195,16 @@ class DynoMobileAppCustomApiCalls {
 		if (!$options['unites']) $options['units'] = 'imperial';
 		if (!$options['region_name']) $options['region_name'] = get_bloginfo( 'name' );
 		return $options;
+	}
+
+	public function get_sites() {
+		$sites = wp_get_sites();
+        $sites_details = array();
+        foreach ($sites as $site) {
+            $details = get_blog_details($site['blog_id']);
+            array_push($sites_details, $details);
+        }
+        return $sites_details;
 	}
 }
 $mobile_app_custom_api_calls = new DynoMobileAppCustomApiCalls();
