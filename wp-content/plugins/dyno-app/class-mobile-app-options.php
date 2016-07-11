@@ -29,7 +29,7 @@ class DynoMobileAppOptions {
 	}
 
 	public function mobile_app_create_admin_page() {
-		$this->mobile_app_options = get_option( 'mobile_app_option_name' ); ?>
+		$this->mobile_app_options = get_option( 'mobile_app_options' ); ?>
 
 		<div class="wrap">
 			
@@ -132,27 +132,27 @@ class DynoMobileAppOptions {
 
 	public function guide_slug_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_option_name[guide_slug]" id="guide_slug" value="%s"> default: guide',
+			'<input class="regular-text" type="text" name="mobile_app_options[guide_slug]" id="guide_slug" value="%s"> default: guide',
 			isset( $this->mobile_app_options['guide_slug'] ) ? esc_attr( $this->mobile_app_options['guide_slug']) : ''
 		);
 	}
 
 	public function library_slug_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_option_name[library_slug]" id="library_slug" value="%s"> default: library',
+			'<input class="regular-text" type="text" name="mobile_app_options[library_slug]" id="library_slug" value="%s"> default: library',
 			isset( $this->mobile_app_options['library_slug'] ) ? esc_attr( $this->mobile_app_options['library_slug']) : ''
 		);
 	}
 
 	public function more_slug_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_option_name[more_slug]" id="more_slug" value="%s"> default: more',
+			'<input class="regular-text" type="text" name="mobile_app_options[more_slug]" id="more_slug" value="%s"> default: more',
 			isset( $this->mobile_app_options['more_slug'] ) ? esc_attr( $this->mobile_app_options['more_slug']) : ''
 		);
 	}
 
 	public function units_callback() {
-		?> <select name="mobile_app_option_name[units]" id="units">
+		?> <select name="mobile_app_options[units]" id="units">
 			<?php $selected = (isset( $this->mobile_app_options['units'] ) && $this->mobile_app_options['units'] === 'imperial') ? 'selected' : '' ; ?>
 			<option value="imperial" <?php echo $selected; ?>>Imperial</option>
 			<?php $selected = (isset( $this->mobile_app_options['units'] ) && $this->mobile_app_options['units'] === 'metric') ? 'selected' : '' ; ?>
@@ -162,7 +162,7 @@ class DynoMobileAppOptions {
 
 	public function region_name_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_option_name[region_name]" id="region_name" value="%s">',
+			'<input class="regular-text" type="text" name="mobile_app_options[region_name]" id="region_name" value="%s">',
 			isset( $this->mobile_app_options['region_name'] ) ? esc_attr( $this->mobile_app_options['region_name']) : ''
 		);
 		echo ' default: site name (currently: '.get_bloginfo( 'name' ).')';
@@ -185,15 +185,21 @@ class DynoMobileAppCustomApiCalls {
 		    'methods' => 'GET',
 		    'callback' => array($this, 'get_sites'),
 		) );
+		register_rest_route( 'mobile-app/v1/', '/regions/', array(
+		    'methods' => 'GET',
+		    'callback' => array($this, 'get_sites'),
+		) );
 	}
 
-	public function get_mobile_app_options() {
+	public function get_mobile_app_options($blog_id = NULL) {
+		if ($blog_id) switch_to_blog($blog_id);
 		$options = get_option( 'mobile_app_options' );
 		if (!$options['guide_slug']) $options['guide_slug'] = 'guide';
-		if (!$options['library_slug']) $options['library_sluge'] = 'library';
-		if (!$options['more_slug']) $options['more_sluge'] = 'more';
-		if (!$options['unites']) $options['units'] = 'imperial';
+		if (!$options['library_slug']) $options['library_slug'] = 'library';
+		if (!$options['more_slug']) $options['more_slug'] = 'more';
+		if (!$options['units']) $options['units'] = 'imperial';
 		if (!$options['region_name']) $options['region_name'] = get_bloginfo( 'name' );
+		if ($blog_id) restore_current_blog();
 		return $options;
 	}
 
@@ -202,6 +208,10 @@ class DynoMobileAppCustomApiCalls {
         $sites_details = array();
         foreach ($sites as $site) {
             $details = get_blog_details($site['blog_id']);
+            $options = $this->get_mobile_app_options($site['blog_id']);
+            foreach ($options as $key => $value) {
+            	$details->$key = $value;
+            }
             array_push($sites_details, $details);
         }
         return $sites_details;
