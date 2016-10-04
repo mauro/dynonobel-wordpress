@@ -68,25 +68,33 @@ class DynoMobileAppOptions {
 		);
 
 		add_settings_field(
-			'guide_slug', // id
+			'slug_guide', // id
 			'Explosives Engineers\' Guide', // title
-			array( $this, 'guide_slug_callback' ), // callback
+			array( $this, 'slug_guide_callback' ), // callback
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
 
 		add_settings_field(
-			'library_slug', // id
+			'slug_library', // id
 			'Technical Library', // title
-			array( $this, 'library_slug_callback' ), // callback
+			array( $this, 'slug_library_callback' ), // callback
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
 
 		add_settings_field(
-			'more_slug', // id
+			'slug_more', // id
 			'More', // title
-			array( $this, 'more_slug_callback' ), // callback
+			array( $this, 'slug_more_callback' ), // callback
+			'mobile-app-admin', // page
+			'mobile_app_setting_section' // section
+		);
+
+		add_settings_field(
+			'slug_news', // id
+			'Publications and Media Category', // title
+			array( $this, 'slug_news_callback' ), // callback
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
@@ -98,20 +106,32 @@ class DynoMobileAppOptions {
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
+
+		add_settings_field(
+			'countries', // id
+			'Countries', // title
+			array( $this, 'countries_callback' ), // callback
+			'mobile-app-admin', // page
+			'mobile_app_setting_section' // section
+		);
 	}
 
 	public function mobile_app_sanitize($input) {
 		$sanitary_values = array();
-		if ( isset( $input['guide_slug'] ) ) {
-			$sanitary_values['guide_slug'] = sanitize_text_field( $input['guide_slug'] );
+		if ( isset( $input['slug_guide'] ) ) {
+			$sanitary_values['slug_guide'] = sanitize_text_field( $input['slug_guide'] );
 		}
 
-		if ( isset( $input['library_slug'] ) ) {
-			$sanitary_values['library_slug'] = sanitize_text_field( $input['library_slug'] );
+		if ( isset( $input['slug_library'] ) ) {
+			$sanitary_values['slug_library'] = sanitize_text_field( $input['slug_library'] );
 		}
 
-		if ( isset( $input['more_slug'] ) ) {
-			$sanitary_values['more_slug'] = sanitize_text_field( $input['more_slug'] );
+		if ( isset( $input['slug_more'] ) ) {
+			$sanitary_values['slug_more'] = sanitize_text_field( $input['slug_more'] );
+		}
+
+		if ( isset( $input['slug_news'] ) ) {
+			$sanitary_values['slug_news'] = sanitize_text_field( $input['slug_news'] );
 		}
 
 		if ( isset( $input['units'] ) ) {
@@ -122,6 +142,10 @@ class DynoMobileAppOptions {
 			$sanitary_values['region_name'] = sanitize_text_field( $input['region_name'] );
 		}
 
+		if ( isset( $input['countries'] ) ) {
+			$sanitary_values['countries'] = sanitize_text_field( $input['countries'] );
+		}
+
 		return $sanitary_values;
 	}
 
@@ -130,24 +154,31 @@ class DynoMobileAppOptions {
 		
 	}
 
-	public function guide_slug_callback() {
+	public function slug_guide_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[guide_slug]" id="guide_slug" value="%s"> default: guide',
-			isset( $this->mobile_app_options['guide_slug'] ) ? esc_attr( $this->mobile_app_options['guide_slug']) : ''
+			'<input class="regular-text" type="text" name="mobile_app_options[slug_guide]" id="slug_guide" value="%s"> default: guide',
+			isset( $this->mobile_app_options['slug_guide'] ) ? esc_attr( $this->mobile_app_options['slug_guide']) : ''
 		);
 	}
 
-	public function library_slug_callback() {
+	public function slug_library_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[library_slug]" id="library_slug" value="%s"> default: library',
-			isset( $this->mobile_app_options['library_slug'] ) ? esc_attr( $this->mobile_app_options['library_slug']) : ''
+			'<input class="regular-text" type="text" name="mobile_app_options[slug_library]" id="slug_library" value="%s"> default: library',
+			isset( $this->mobile_app_options['slug_library'] ) ? esc_attr( $this->mobile_app_options['slug_library']) : ''
 		);
 	}
 
-	public function more_slug_callback() {
+	public function slug_more_callback() {
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[more_slug]" id="more_slug" value="%s"> default: more',
-			isset( $this->mobile_app_options['more_slug'] ) ? esc_attr( $this->mobile_app_options['more_slug']) : ''
+			'<input class="regular-text" type="text" name="mobile_app_options[slug_more]" id="slug_more" value="%s"> default: more',
+			isset( $this->mobile_app_options['slug_more'] ) ? esc_attr( $this->mobile_app_options['slug_more']) : ''
+		);
+	}
+
+	public function slug_news_callback() {
+		printf(
+			'<input class="regular-text" type="text" name="mobile_app_options[slug_news]" id="slug_news" value="%s"> default: news',
+			isset( $this->mobile_app_options['slug_news'] ) ? esc_attr( $this->mobile_app_options['slug_news']) : ''
 		);
 	}
 
@@ -168,6 +199,14 @@ class DynoMobileAppOptions {
 		echo ' default: site name (currently: '.get_bloginfo( 'name' ).')';
 	}
 
+	public function countries_callback() {
+		printf(
+			'<input class="regular-text" type="text" name="mobile_app_options[countries]" id="countries" value="%s">',
+			isset( $this->mobile_app_options['countries'] ) ? esc_attr( $this->mobile_app_options['countries']) : ''
+		);
+		echo '<br/><br/>A list of 2 letters ISO country codes within this region, separated by comma.<br/>I.e.: Europe would be "AL, AD, AT, BY, BE, BA, BG, etc.".<br/><a href="http://www.countrycallingcodes.com/iso-country-codes/">This site</a> has a thorough list.';
+	}
+
 }
 if ( is_admin() ) $mobile_app_options_page = new DynoMobileAppOptions();
 
@@ -177,10 +216,10 @@ class DynoMobileAppCustomApiCalls {
 	}
 
 	public function register_routes() {
-		register_rest_route( 'mobile-app/v1/', '/options/', array(
-		    'methods' => 'GET',
-		    'callback' => array($this, 'get_mobile_app_options'),
-		) );
+		//register_rest_route( 'mobile-app/v1/', '/options/', array(
+		//    'methods' => 'GET',
+		//    'callback' => array($this, 'get_mobile_app_options'),
+		//) );
 		register_rest_route( 'mobile-app/v1/', '/sites/', array(
 		    'methods' => 'GET',
 		    'callback' => array($this, 'get_sites'),
@@ -191,12 +230,15 @@ class DynoMobileAppCustomApiCalls {
 		) );
 	}
 
-	public function get_mobile_app_options($blog_id = NULL) {
+	private function get_mobile_app_options($blog_id = NULL) {
 		if ($blog_id) switch_to_blog($blog_id);
 		$options = get_option( 'mobile_app_options' );
-		if (!$options['guide_slug']) $options['guide_slug'] = 'guide';
-		if (!$options['library_slug']) $options['library_slug'] = 'library';
-		if (!$options['more_slug']) $options['more_slug'] = 'more';
+		if (!$options['slug_guide']) $options['slug_guide'] = 'guide';
+		if (!$options['slug_library']) $options['slug_library'] = 'library';
+		if (!$options['slug_more']) $options['slug_more'] = 'more';
+		if (!$options['slug_news']) $options['slug_news'] = 'news';
+		$category = get_category_by_slug($options['slug_news']); 
+  		$options['news_category_id'] = $category->term_id;
 		if (!$options['units']) $options['units'] = 'imperial';
 		if (!$options['region_name']) $options['region_name'] = get_bloginfo( 'name' );
 		if ($blog_id) restore_current_blog();
@@ -222,9 +264,9 @@ $mobile_app_custom_api_calls = new DynoMobileAppCustomApiCalls();
 /* 
  * Retrieve this value with:
  * $mobile_app_options = get_option( 'mobile_app_options' ); // Array of All Options
- * $guide_slug = $mobile_app_options['guide_slug']; // Guide Slug
- * $library_slug = $mobile_app_options['library_slug']; // Library Slug
- * $more_slug = $mobile_app_options['more_slug']; // More Slug
+ * $slug_guide = $mobile_app_options['slug_guide']; // Guide Slug
+ * $slug_library = $mobile_app_options['slug_library']; // Library Slug
+ * $slug_more = $mobile_app_options['slug_more']; // More Slug
  * $units = $mobile_app_options['units']; // Units
  * $region_name = $mobile_app_options['region_name']; // Region Name
  * Generated by the WordPress Option Page generator
