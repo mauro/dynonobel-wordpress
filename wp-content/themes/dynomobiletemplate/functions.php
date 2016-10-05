@@ -48,7 +48,7 @@ function dynomobiletemplate_scripts() {
 		$style = '';
 		if (empty($table_id)) $table_id = $this->generate_unique_id();
 		if ( !in_array( $search, array('true', 'false') ) ) $search = 'false';
-		$f = fopen(ABSPATH.$file, "r");
+		$f = fopen(ABSPATH.$file, "r") or return 'file not found at '.$file;
 		if (!$f) return 'Error: file not found at '.$file;
 		$isFirstRow = true;
 		$column = 1;

@@ -228,6 +228,20 @@ class DynoMobileAppCustomApiCalls {
 		    'methods' => 'GET',
 		    'callback' => array($this, 'get_sites'),
 		) );
+		register_rest_route( 'mobile-app/v1/', '/contents/', array(
+			'methods' => 'GET',
+			'callback' => array($this, 'get_all_contents'),
+			
+			'args'	=> array(
+				'after' => array(
+							'description'        => __( 'Limit response to resources modified after a given ISO8601 compliant date.' ),
+							'type'               => 'string',
+							'format'             => 'date-time',
+							//'validate_callback'  => 'rest_validate_request_arg',
+							),
+			),
+
+		) );
 	}
 
 	private function get_mobile_app_options($blog_id = NULL) {
@@ -257,6 +271,40 @@ class DynoMobileAppCustomApiCalls {
             array_push($sites_details, $details);
         }
         return $sites_details;
+	}
+
+	public function get_all_contents( $request ) {
+		$posts = $this->get_all_items( 'post', $request );
+		$pages = $this->get_all_items( 'page', $request );
+		$contents = array_merge((array) $posts, (array) $pages);
+		$response = rest_ensure_response( $contents );
+		return $response;
+	}
+
+	private function get_all_items($post_type, $request) {
+		$rest_posts_controller = new WP_REST_Posts_Controller($post_type);
+		$query_args = array( 'post_type' => $post_type, 'posts_per_page' => -1 );
+		if ($request['after']) {
+			// Get all posts that were modified after the date
+			$query_args['date_query'] = array(
+									array(
+									'column' => 'post_modified_gmt',
+									'after' => $request['after'],
+									),
+								);
+		}
+		$posts_query = new WP_Query();
+		$query_result = $posts_query->query( $query_args );
+		$posts = array();
+		foreach ( $query_result as $post ) {
+			if ( ! $rest_posts_controller->check_read_permission( $post ) ) {
+				continue;
+			}
+
+			$data = $rest_posts_controller->prepare_item_for_response( $post, $request );
+			$posts[] = $rest_posts_controller->prepare_response_for_collection( $data );
+		}
+		return $posts;
 	}
 }
 $mobile_app_custom_api_calls = new DynoMobileAppCustomApiCalls();
