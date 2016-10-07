@@ -48,14 +48,14 @@ function dynomobiletemplate_scripts() {
 		$style = '';
 		if (empty($table_id)) $table_id = $this->generate_unique_id();
 		if ( !in_array( $search, array('true', 'false') ) ) $search = 'false';
-		$f = fopen(ABSPATH.$file, "r") or return 'file not found at '.$file;
+		$f = fopen(ABSPATH.$file, "r"); //or return 'file not found at '.$file;
 		if (!$f) return 'Error: file not found at '.$file;
 		$isFirstRow = true;
 		$column = 1;
 		$columns_to_show_xs = 1;
-		$columns_to_show_sm = 3;
-		$columns_to_show_md = 5;
-		$visibility_toggle = "<div class=\"visibility-toggle\">\n 	<h3>Toggle Columns Visibility</h3>\n 	<ul>\n";
+		$columns_to_show_sm = 1;
+		$columns_to_show_md = 1;
+		$visibility_toggle = "<div class=\"visibility-toggle\">\n 	<h3>Compare Data</h3>\n 	<ul>\n";
 		$table = "<table id=\"".$table_id."\" class=\"supertable display responsive\" width=\"100%\">\n    <thead>\n";
 		while (($row = fgetcsv($f)) !== false) {
 		        $table .= "      <tr>\n";
