@@ -90,7 +90,7 @@ class DynoMobileAppOptions {
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
-
+/*
 		add_settings_field(
 			'slug_news', // id
 			'Publications and Media Category', // title
@@ -98,7 +98,7 @@ class DynoMobileAppOptions {
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
-
+*/
 		add_settings_field(
 			'units', // id
 			'Units', // title
@@ -129,11 +129,11 @@ class DynoMobileAppOptions {
 		if ( isset( $input['slug_more'] ) ) {
 			$sanitary_values['slug_more'] = sanitize_text_field( $input['slug_more'] );
 		}
-
+/*
 		if ( isset( $input['slug_news'] ) ) {
 			$sanitary_values['slug_news'] = sanitize_text_field( $input['slug_news'] );
 		}
-
+*/
 		if ( isset( $input['units'] ) ) {
 			$sanitary_values['units'] = $input['units'];
 		}
@@ -175,12 +175,14 @@ class DynoMobileAppOptions {
 		);
 	}
 
+/*
 	public function slug_news_callback() {
 		printf(
 			'<input class="regular-text" type="text" name="mobile_app_options[slug_news]" id="slug_news" value="%s"> default: news',
 			isset( $this->mobile_app_options['slug_news'] ) ? esc_attr( $this->mobile_app_options['slug_news']) : ''
 		);
 	}
+*/
 
 	public function units_callback() {
 		?> <select name="mobile_app_options[units]" id="units">
@@ -237,7 +239,7 @@ class DynoMobileAppCustomApiCalls {
 							'description'        => __( 'Limit response to resources modified after a given ISO8601 compliant date.' ),
 							'type'               => 'string',
 							'format'             => 'date-time',
-							//'validate_callback'  => 'rest_validate_request_arg',
+							'validate_callback'  => 'rest_validate_request_arg',
 							),
 			),
 
@@ -280,6 +282,11 @@ class DynoMobileAppCustomApiCalls {
 		$response = rest_ensure_response( $contents );
 		return $response;
 	}
+
+	// Example call to get all contents:
+	// http://dynonobel.wpengine.com/wp-json/mobile-app/v1/contents
+	// Example call to get all contents modified after Oct 6 2016
+	// http://dynonobel.wpengine.com/wp-json/mobile-app/v1/contents?after=2016-10-06T00:00:01
 
 	private function get_all_items($post_type, $request) {
 		$rest_posts_controller = new WP_REST_Posts_Controller($post_type);
