@@ -276,11 +276,38 @@ class DynoMobileAppCustomApiCalls {
 	}
 
 	public function get_all_contents( $request ) {
+		if ($request['deleted']) {
+			return $this->get_all_deleted_contents($request);
+		}
 		$posts = $this->get_all_items( 'post', $request );
 		$pages = $this->get_all_items( 'page', $request );
 		$contents = array_merge((array) $posts, (array) $pages);
 		$response = rest_ensure_response( $contents );
 		return $response;
+	}
+
+	private function get_all_deleted_contents($request) {
+		$query_args = array(
+    	'post_type' => 'any',
+    	'post_author' => $current_user->ID,
+    	'post_status' => array('pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash')    
+		);
+		if ($request['after']) {
+			// Get all posts that were modified after the date
+			$query_args['date_query'] = array(
+									array(
+									'column' => 'post_modified_gmt',
+									'after' => $request['after'],
+									),
+								);
+		}
+		$posts_query = new WP_Query();
+		$query_result = $posts_query->query( $query_args );
+		$posts = array();
+		foreach ( $query_result as $post ) {
+			$posts[] = $post->ID;
+		}
+		return $posts;
 	}
 
 	// Example call to get all contents:
@@ -290,7 +317,11 @@ class DynoMobileAppCustomApiCalls {
 
 	private function get_all_items($post_type, $request) {
 		$rest_posts_controller = new WP_REST_Posts_Controller($post_type);
-		$query_args = array( 'post_type' => $post_type, 'posts_per_page' => -1 );
+		$query_args = array(
+			'post_type' => $post_type,
+			'posts_per_page' => -1,
+			'post_status' => 'publish',
+			);
 		if ($request['after']) {
 			// Get all posts that were modified after the date
 			$query_args['date_query'] = array(
