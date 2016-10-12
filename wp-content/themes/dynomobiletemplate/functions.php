@@ -97,7 +97,11 @@ function dynomobiletemplate_scripts() {
 				        \"dom\": 'Bfrtip',
 				                \"buttons\": [
 				                    'colvis'
-				                ]
+				                ],
+				        \"columnDefs\": [
+				            { targets: [0], visible: true},
+				            { targets: '_all', visible: false }
+				        ]
 				    } );
 				 
 				    jQuery('a.toggle-vis').on( 'click', function (e) {

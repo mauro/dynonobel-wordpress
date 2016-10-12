@@ -235,11 +235,15 @@ class DynoMobileAppCustomApiCalls {
 			'callback' => array($this, 'get_all_contents'),
 			
 			'args'	=> array(
-				'after' => array(
+				'after' =>	array(
 							'description'        => __( 'Limit response to resources modified after a given ISO8601 compliant date.' ),
 							'type'               => 'string',
 							'format'             => 'date-time',
 							'validate_callback'  => 'rest_validate_request_arg',
+							),
+				'deleted' => array(
+							'description'		=> __('Get a list of IDs for the deleted items'),
+							'type'				=> 'bool',
 							),
 			),
 
