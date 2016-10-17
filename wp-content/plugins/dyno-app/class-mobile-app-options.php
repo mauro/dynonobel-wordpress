@@ -11,6 +11,57 @@
 class DynoMobileAppOptions {
 	private $mobile_app_options;
 
+	public $slugs =  array(
+			'slug_guide' => array(
+				'title' => 'Explosives Engineers\' Guide', 
+				'default' => 'guide',
+				),
+			'slug_library' => array(
+				'title' => 'Library', 
+				'default' => 'library',
+				),
+			'slug_more' => array(
+				'title' => 'More section', 
+				'default' => 'more',
+				),
+			'slug_explosives_per_blasthole' => array(
+				'title' => 'Explosives per Blasthole Formula', 
+				'default' => 'formula-for-explosive-per-blasthole',
+				),
+			'slug_rock_per_blasthole' => array(
+				'title' => 'Rock per Blasthole Formula', 
+				'default' => 'formula-for-rock-per-blasthole',
+				),
+			'slug_powder_factor' => array(
+				'title' => 'Powder Factor Formula', 
+				'default' => 'formula-for-powder-factor',
+				),
+			'slug_wet_hole' => array(
+				'title' => 'Wet Hole Formula', 
+				'default' => 'formula-for-wet-hole',
+				),
+			'slug_ground_vibration_prediction' => array(
+				'title' => 'Ground Vibration Prediction', 
+				'default' => 'formula-for-ground-vibration-prediction',
+				),
+			'slug_explosive_charge_per_blasthole' => array(
+				'title' => 'Explosive Charge Per Blasthole', 
+				'default' => 'formula-for-explosive-charge-per-blasthole',
+				),
+			'slug_scaled_distance' => array(
+				'title' => 'Scaled Distance', 
+				'default' => 'formula-for-scaled-distance',
+				),
+			'slug_distance_to_nearest_structure' => array(
+				'title' => 'Distance To Nearest Structure',
+				'default' => 'formula-for-distance-to-nearest-structure'
+				),
+			'slug_airblast_prediction' => array(
+				'title' => 'Airblast Prediction',
+				'default' => 'formula-for-airblast-prediction'
+				),
+		);
+
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'mobile_app_add_plugin_page' ) );
 		add_action( 'admin_init', array( $this, 'mobile_app_page_init' ) );
@@ -46,18 +97,11 @@ class DynoMobileAppOptions {
 	<?php }
 
 	public function mobile_app_page_init() {
+
 		register_setting(
 			'mobile_app_option_group', // option_group
 			'mobile_app_options', // option_name
 			array( $this, 'mobile_app_sanitize' ) // sanitize_callback
-		);
-
-		add_settings_field(
-			'region_name', // id
-			'Region Name', // title
-			array( $this, 'region_name_callback' ), // callback
-			'mobile-app-admin', // page
-			'mobile_app_setting_section' // section
 		);
 
 		add_settings_section(
@@ -68,37 +112,13 @@ class DynoMobileAppOptions {
 		);
 
 		add_settings_field(
-			'slug_guide', // id
-			'Explosives Engineers\' Guide', // title
-			array( $this, 'slug_guide_callback' ), // callback
+			'region_name', // id
+			'Region Name', // title
+			array( $this, 'region_name_callback' ), // callback
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
 
-		add_settings_field(
-			'slug_library', // id
-			'Technical Library', // title
-			array( $this, 'slug_library_callback' ), // callback
-			'mobile-app-admin', // page
-			'mobile_app_setting_section' // section
-		);
-
-		add_settings_field(
-			'slug_more', // id
-			'More', // title
-			array( $this, 'slug_more_callback' ), // callback
-			'mobile-app-admin', // page
-			'mobile_app_setting_section' // section
-		);
-/*
-		add_settings_field(
-			'slug_news', // id
-			'Publications and Media Category', // title
-			array( $this, 'slug_news_callback' ), // callback
-			'mobile-app-admin', // page
-			'mobile_app_setting_section' // section
-		);
-*/
 		add_settings_field(
 			'units', // id
 			'Units', // title
@@ -114,26 +134,30 @@ class DynoMobileAppOptions {
 			'mobile-app-admin', // page
 			'mobile_app_setting_section' // section
 		);
+
+
+		foreach ($this->slugs as $slug => $parameters) {
+			add_settings_field(
+						$slug, // id
+						$parameters['title'], // title
+						array( $this, 'slug_callback' ), // callback
+						'mobile-app-admin', // page
+						'mobile_app_setting_section', // section
+						$args = array( $slug, $parameters['default'] ) // arguments for callback
+					);
+		}
+
 	}
 
 	public function mobile_app_sanitize($input) {
 		$sanitary_values = array();
-		if ( isset( $input['slug_guide'] ) ) {
-			$sanitary_values['slug_guide'] = sanitize_text_field( $input['slug_guide'] );
+		
+		foreach ($slugs as $slug => $parameters) {
+			if ( isset( $input[$slug] ) ) {
+				$sanitary_values[$slug] = sanitize_text_field( $input[$slug] );
+			}
 		}
 
-		if ( isset( $input['slug_library'] ) ) {
-			$sanitary_values['slug_library'] = sanitize_text_field( $input['slug_library'] );
-		}
-
-		if ( isset( $input['slug_more'] ) ) {
-			$sanitary_values['slug_more'] = sanitize_text_field( $input['slug_more'] );
-		}
-/*
-		if ( isset( $input['slug_news'] ) ) {
-			$sanitary_values['slug_news'] = sanitize_text_field( $input['slug_news'] );
-		}
-*/
 		if ( isset( $input['units'] ) ) {
 			$sanitary_values['units'] = $input['units'];
 		}
@@ -154,35 +178,17 @@ class DynoMobileAppOptions {
 		
 	}
 
-	public function slug_guide_callback() {
-		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[slug_guide]" id="slug_guide" value="%s"> default: guide',
-			isset( $this->mobile_app_options['slug_guide'] ) ? esc_attr( $this->mobile_app_options['slug_guide']) : ''
-		);
-	}
+	public function slug_callback($args) {
+		$slug = $args[0];
+		$default = $args[1];
 
-	public function slug_library_callback() {
+		echo '<input class="regular-text" type="text" name="mobile_app_options['.$slug.']" id="'.$slug.'"';
 		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[slug_library]" id="slug_library" value="%s"> default: library',
-			isset( $this->mobile_app_options['slug_library'] ) ? esc_attr( $this->mobile_app_options['slug_library']) : ''
+			'value="%s">',
+			isset( $this->mobile_app_options[$slug] ) ? esc_attr( $this->mobile_app_options[$slug]) : ''
 		);
+		echo ' default slug: '.$default;
 	}
-
-	public function slug_more_callback() {
-		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[slug_more]" id="slug_more" value="%s"> default: more',
-			isset( $this->mobile_app_options['slug_more'] ) ? esc_attr( $this->mobile_app_options['slug_more']) : ''
-		);
-	}
-
-/*
-	public function slug_news_callback() {
-		printf(
-			'<input class="regular-text" type="text" name="mobile_app_options[slug_news]" id="slug_news" value="%s"> default: news',
-			isset( $this->mobile_app_options['slug_news'] ) ? esc_attr( $this->mobile_app_options['slug_news']) : ''
-		);
-	}
-*/
 
 	public function units_callback() {
 		?> <select name="mobile_app_options[units]" id="units">
@@ -206,7 +212,7 @@ class DynoMobileAppOptions {
 			'<input class="regular-text" type="text" name="mobile_app_options[countries]" id="countries" value="%s">',
 			isset( $this->mobile_app_options['countries'] ) ? esc_attr( $this->mobile_app_options['countries']) : ''
 		);
-		echo '<br/><br/>A list of 2 letters ISO country codes within this region, separated by comma.<br/>I.e.: Europe would be "AL, AD, AT, BY, BE, BA, BG, etc.".<br/><a href="http://www.countrycallingcodes.com/iso-country-codes/">This site</a> has a thorough list.';
+		echo '<br/><br/>A list of 2 letters ISO country codes within this region, separated by comma.<br/>I.e.: Europe would be "AL, AD, AT, BY, BE, BA, BG, etc.".<br/><a href="http://www.countrycallingcodes.com/iso-country-codes/">This site</a> has a thorough list.<hr/>';
 	}
 
 }
@@ -253,15 +259,18 @@ class DynoMobileAppCustomApiCalls {
 	private function get_mobile_app_options($blog_id = NULL) {
 		if ($blog_id) switch_to_blog($blog_id);
 		$options = get_option( 'mobile_app_options' );
-		if (!$options['slug_guide']) $options['slug_guide'] = 'guide';
-		if (!$options['slug_library']) $options['slug_library'] = 'library';
-		if (!$options['slug_more']) $options['slug_more'] = 'more';
-		if (!$options['slug_news']) $options['slug_news'] = 'news';
-		$category = get_category_by_slug($options['slug_news']); 
-  		$options['news_category_id'] = $category->term_id;
+
+		$dyno = new DynoMobileAppOptions();
+
+		foreach ($dyno->slugs as $slug => $parameters) {
+			if (!$options[$slug]) $options[$slug] = $parameters['default'];	
+		}
+
 		if (!$options['units']) $options['units'] = 'imperial';
 		if (!$options['region_name']) $options['region_name'] = get_bloginfo( 'name' );
+
 		if ($blog_id) restore_current_blog();
+
 		return $options;
 	}
 
@@ -293,7 +302,6 @@ class DynoMobileAppCustomApiCalls {
 	private function get_all_deleted_contents($request) {
 		$query_args = array(
     	'post_type' => 'any',
-    	'post_author' => $current_user->ID,
     	'post_status' => array('pending', 'draft', 'auto-draft', 'future', 'private', 'inherit', 'trash')    
 		);
 		if ($request['after']) {
