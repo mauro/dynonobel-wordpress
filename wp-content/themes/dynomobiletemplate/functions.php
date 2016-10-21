@@ -86,6 +86,7 @@ function dynomobiletemplate_scripts() {
 		fclose($f);
 		$table .= "    </tbody>\n</table>\n";
 
+		/* Only the first column is visible
 		$javascript = "
 			<script type=\"text/javascript\">
 				jQuery(document).ready(function() {
@@ -116,6 +117,39 @@ function dynomobiletemplate_scripts() {
 				} );
 			</script>
 		";
+		*/
+
+		// All Columns are visible
+		$javascript = "
+			<script type=\"text/javascript\">
+				jQuery(document).ready(function() {
+				    var table = jQuery('#".$table_id."').DataTable( {
+				        \"paging\": false,
+				        \"responsive\": true,
+				        \"colReorder\": true,
+				        \"searching\": ".$search.",
+				        \"dom\": 'Bfrtip',
+				                \"buttons\": [
+				                    'colvis'
+				                ],
+				        \"columnDefs\": [
+				            { targets: '_all', visible: true }
+				        ]
+				    } );
+				 
+				    jQuery('a.toggle-vis').on( 'click', function (e) {
+				        e.preventDefault();
+				 
+				        // Get the column API object
+				        var column = table.column( jQuery(this).attr('data-column') );
+				 
+				        // Toggle the visibility
+				        column.visible( ! column.visible() );
+				    } );
+				} );
+			</script>
+		";
+
 		return $table.$style.$javascript;
 	}
  }
