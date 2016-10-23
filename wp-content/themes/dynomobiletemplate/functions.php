@@ -27,7 +27,7 @@ function dynomobiletemplate_scripts() {
 
 	// Shortcode function
 	public function render_table( $atts ) {
-		return $this->table_from_csv($atts['file'], $atts['search'], $atts['id']);
+		return $this->table_from_csv($atts['file'], $atts['search'], $atts['id'], $atts['order'], $atts['ascending']);
 	}
 
 	// Helper function to generate a unique HTML/CSS ID for a table if
@@ -44,7 +44,7 @@ function dynomobiletemplate_scripts() {
 
 	// Rendering function: gets the file and outputs the necessary HTML and Javascript Code
 	// If no file is found returns an error to be rendered in place of the shortcode.
- 	private function table_from_csv($file, $search = 'false', $table_id) {
+ 	private function table_from_csv($file, $search = 'false', $table_id, $column_to_order_by = 0, $ascending = 'true') {
 		$style = '';
 		if (empty($table_id)) $table_id = $this->generate_unique_id();
 		if ( !in_array( $search, array('true', 'false') ) ) $search = 'false';
@@ -118,6 +118,12 @@ function dynomobiletemplate_scripts() {
 			</script>
 		";
 		*/
+		
+		if ($ascending == 'true') $sort_order = 'asc';
+		else $sort_order = 'desc';
+		if (intval($column_to_order_by) != 0) {
+			$column_to_order_by = intval($column_to_order_by) - 1;
+		}
 
 		// All Columns are visible
 		$javascript = "
@@ -128,6 +134,7 @@ function dynomobiletemplate_scripts() {
 				        \"responsive\": true,
 				        \"colReorder\": true,
 				        \"searching\": ".$search.",
+				        \"order\": [[ ".$column_to_order_by.", \"".$sort_order."\" ]],
 				        \"dom\": 'Bfrtip',
 				                \"buttons\": [
 				                    'colvis'
