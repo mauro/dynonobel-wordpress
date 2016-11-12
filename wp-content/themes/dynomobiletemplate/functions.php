@@ -123,6 +123,9 @@ function dynomobiletemplate_scripts() {
 		else $sort_order = 'desc';
 		if (intval($column_to_order_by) != 0) {
 			$column_to_order_by = intval($column_to_order_by) - 1;
+			$sort_order_javascript_code = "\"order\": [[ ".$column_to_order_by.", \"".$sort_order."\" ]],";
+		} else {
+			$sort_order_javascript_code = "";
 		}
 
 		// All Columns are visible
@@ -134,7 +137,7 @@ function dynomobiletemplate_scripts() {
 				        \"responsive\": true,
 				        \"colReorder\": true,
 				        \"searching\": ".$search.",
-				        \"order\": [[ ".$column_to_order_by.", \"".$sort_order."\" ]],
+				        ".$sort_order_javascript_code."
 				        \"dom\": 'Bfrtip',
 				                \"buttons\": [
 				                    'colvis'
