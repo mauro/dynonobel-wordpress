@@ -49,13 +49,17 @@ function dynomobiletemplate_scripts() {
 		if (empty($table_id)) $table_id = $this->generate_unique_id();
 		if ( !in_array( $search, array('true', 'false') ) ) $search = 'false';
 		$f = fopen(ABSPATH.$file, "r"); //or return 'file not found at '.$file;
+        $compare_data_label = "Compare Data";
+        if (get_bloginfo("language") == "es_ES" || get_bloginfo("language") == "es_US") {
+            $compare_data_label = "Comparar Información";
+        }
 		if (!$f) return 'Error: file not found at '.$file;
 		$isFirstRow = true;
 		$column = 1;
 		$columns_to_show_xs = 1;
 		$columns_to_show_sm = 1;
 		$columns_to_show_md = 1;
-		$visibility_toggle = "<div class=\"visibility-toggle\">\n 	<h3>Compare Data</h3>\n 	<ul>\n";
+		$visibility_toggle = "<div class=\"visibility-toggle\">\n 	<h3>$compare_data_label</h3>\n 	<ul>\n";
 		$table = "<table id=\"".$table_id."\" class=\"supertable display responsive\" width=\"100%\">\n    <thead>\n";
 		while (($row = fgetcsv($f)) !== false) {
 		        $table .= "      <tr>\n";
@@ -166,3 +170,16 @@ function dynomobiletemplate_scripts() {
 
 // Invoke our plug-in class
  $csv_responsive_tables = new CSV_Responsive_Tables();
+
+// This is a temporary fix to WordPress 4.7.1 and 4.7.2 known bug that is
+// preventing CSV upload from the Media Manager.
+// REMOVE THIS when the 4.7.3 update is available and installed.
+
+function cf_disable_real_mime_check($data,$file,$filename,$mimes){
+    $wp_filetype		=	wp_check_filetype($filename,$mimes);
+    $ext				=	$wp_filetype['ext'];
+    $type				=	$wp_filetype['type'];
+    $proper_filename	=	$data['proper_filename'];
+    return compact('ext','type','proper_filename');
+}
+add_filter('wp_check_filetype_and_ext','cf_disable_real_mime_check',10,4);

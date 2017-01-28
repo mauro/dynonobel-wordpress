@@ -151,8 +151,8 @@ class DynoMobileAppOptions {
 
 	public function mobile_app_sanitize($input) {
 		$sanitary_values = array();
-		
-		foreach ($slugs as $slug => $parameters) {
+
+        foreach ($this->slugs as $slug => $parameters) {
 			if ( isset( $input[$slug] ) ) {
 				$sanitary_values[$slug] = sanitize_text_field( $input[$slug] );
 			}

@@ -220,17 +220,17 @@ header {
 	display: table-cell;
 	vertical-align: middle;
 	padding: 20px;
-	font-family: AppleSDGothicNeo-Light;
+	font-family: AppleSDGothicNeo-Light, Arial;
 }
 .hero h1 a {
 	font-weight: 200;
 	font-size: 30pt;
-	font-family: AppleSDGothicNeo-Light;
+	font-family: AppleSDGothicNeo-Light, Arial;
 	color: black;
 }
 a {
 	font-size: inherit;
-	font-family: AppleSDGothicNeo-Light;
+	font-family: AppleSDGothicNeo-Light, Arial;
 	text-transform: capitalize;
 	text-decoration: none;
 	color: navy;
