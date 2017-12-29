@@ -3,7 +3,7 @@
  * Plugin name:		Dyno Nobel Mobile App Options
  * Description: 	Adds a page in the Administration Area with options for the Mobile App. Adds cusotm JSON call to retrieve those options.
  * Author: Mauro Dalu
- * Version: 1.0
+ * Version: January 2018
  * Author URI: http://ipassion.it
  * Plugin URI: http://surgeworks.com
 **/
