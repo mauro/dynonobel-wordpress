@@ -64,6 +64,10 @@ class DynoMobileAppOptions {
 				'title' => 'Overpressure Prediction',
 				'default' => 'formula-for-overpressure-prediction'
 				),
+			'slug_presplit_control' => array(
+				'title' => 'Presplit Control',
+				'default' => 'formula-for-presplit-control'
+				),
 		);
 
 	public function __construct() {
